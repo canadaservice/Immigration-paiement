@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -22,14 +21,11 @@ body{
   background:white;
   padding:30px;
   border-radius:12px;
-  width:340px;
+  width:350px;
   text-align:center;
 }
 
-.logo{
-  width:120px;
-  margin-bottom:10px;
-}
+.logo{ width:120px; margin-bottom:10px; }
 
 select,input,button{
   width:100%;
@@ -42,11 +38,6 @@ button{
   color:white;
   border:none;
   font-weight:bold;
-  cursor:pointer;
-}
-
-button:hover{
-  background:#0097a7;
 }
 </style>
 
@@ -62,30 +53,82 @@ button:hover{
 
 <h3>Paiement commande alimentaire</h3>
 
-<select id="amount">
-  <option value="150">Commande simple - 150 USD</option>
-  <option value="300">Commande moyenne - 300 USD</option>
-  <option value="500">Commande complète - 500 USD</option>
+<!-- 🌍 PAYS -->
+<select id="country" onchange="updateAll()">
+  <option value="BEN">Bénin</option>
+  <option value="CIV">Côte d'Ivoire</option>
+  <option value="CMR">Cameroun</option>
+  <option value="COD">RDC</option>
+  <option value="GAB">Gabon</option>
+  <option value="SEN">Sénégal</option>
 </select>
 
-<input id="phone" placeholder="Entrez votre numéro">
+<!-- 📡 OPERATEUR -->
+<select id="operator"></select>
+
+<!-- 📞 TELEPHONE -->
+<input id="phone">
+
+<!-- 💰 MONTANT -->
+<input id="amount" type="number" placeholder="Montant USD">
+
+<p id="result"></p>
 
 <button onclick="payer()">Payer</button>
-
-<p id="msg"></p>
 
 </div>
 
 <script>
 
+// 🌍 CONFIG
+const data = {
+  BEN:{prefix:"229",currency:"XOF",operators:["MTN","MOOV"]},
+  CIV:{prefix:"225",currency:"XOF",operators:["MTN","ORANGE"]},
+  CMR:{prefix:"237",currency:"XAF",operators:["MTN"]},
+  COD:{prefix:"243",currency:"CDF",operators:["AIRTEL","ORANGE","VODACOM"]},
+  GAB:{prefix:"241",currency:"XAF",operators:["AIRTEL"]},
+  SEN:{prefix:"221",currency:"XOF",operators:["ORANGE","FREE"]}
+};
+
+const rate = 600;
+
+// 🔄 UPDATE
+function updateAll(){
+
+  const c = country.value;
+
+  // opérateurs
+  operator.innerHTML="";
+  data[c].operators.forEach(o=>{
+    let op=document.createElement("option");
+    op.textContent=o;
+    operator.appendChild(op);
+  });
+
+  // prefix
+  phone.value = data[c].prefix;
+}
+
+updateAll();
+
+// 💳 PAIEMENT
 function payer(){
 
-  document.getElementById("msg").innerText = "Connexion paiement...";
+  let usd = parseFloat(amount.value);
+
+  if(!usd){
+    alert("Entrer un montant");
+    return;
+  }
+
+  let local = Math.round(usd * rate);
+
+  result.innerText = "Montant: " + local + " " + data[country.value].currency;
 
   LeekPay.checkout({
-    amount: parseInt(document.getElementById("amount").value),
-    currency: "XOF",
-    apiKey: "pk_live_xxx" // 🔥 MET TA CLE PUBLIQUE ICI
+    amount: local,
+    currency: data[country.value].currency,
+    apiKey: "pk_live_xxx"
   });
 
 }
