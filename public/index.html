@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paiement ACDH</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="box">
+<h2>Paiement ACDH</h2>
+
+<select id="service">
+  <option value="biometrie">Biométrie</option>
+  <option value="langue">Langue</option>
+  <option value="administratif">Administratif</option>
+  <option value="total">Tout</option>
+</select>
+
+<select id="country">
+  <option value="BEN">Bénin</option>
+  <option value="CIV">Côte d'Ivoire</option>
+</select>
+
+<input id="phone" placeholder="Numéro">
+
+<button onclick="payer()">Payer</button>
+
+<p id="result"></p>
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
