@@ -187,6 +187,9 @@ button:hover{
 }
 </style>
 
+<!-- Script officiel LeekPay chargé correctement en premier -->
+<script src="https://leekpay.fr"></script>
+
 </head>
 
 <body>
@@ -260,7 +263,7 @@ button:hover{
       <p id="amountUsd">Équivalent : -- USD</p>
     </div>
 
-    <button type="button" onclick="versEtapeTrois()">Confirmer et Payer</button>
+    <button type="button" onclick="executerLeekPay()">Confirmer et Payer</button>
     <button type="button" class="btn-secondary" onclick="retourEtapeUn()">Retour</button>
   </div>
 
@@ -276,7 +279,7 @@ button:hover{
     <div style="background: #f9f9f9; padding: 12px; border-radius: 6px; text-align: left; font-size: 13px; margin-top: 15px; border: 1px dashed #ccc;">
       <strong>Récapitulatif de validation :</strong><br>
       • Un reçu officiel est envoyé à : <span id="confirmEmail" style="color:#00bcd4; font-weight:bold;"></span><br>
-      • Votre rendez-vous est bloqué pour le : <span id="confirmDate" style="font-weight:bold;"></span>
+      • Votre rendez-vous est blocked pour le : <span id="confirmDate" style="font-weight:bold;"></span>
     </div>
   </div>
 
@@ -316,7 +319,6 @@ function versEtapeDeux() {
     return;
   }
 
-  // Force l'affichage css brut sans passer par les classes compliquées
   document.getElementById('step1').style.display = 'none';
   document.getElementById('step2').style.display = 'block';
   
@@ -325,7 +327,7 @@ function versEtapeDeux() {
   calculateAmounts();
 }
 
-function r_un() {
+function retourEtapeUn() {
   document.getElementById('step2').style.display = 'none';
   document.getElementById('step1').style.display = 'block';
   document.getElementById('p1').classList.remove('completed');
@@ -360,28 +362,25 @@ function calculateAmounts() {
   document.getElementById('amountUsd').innerText = "Équivalent : " + usdAmount + " USD";
 }
 
-function versEtapeTrois(){
+// Fonction de facturation connectée aux déclencheurs d'événements LeekPay
+function executerLeekPay(){
   const phoneVal = document.getElementById('phone').value.trim();
   if(!phoneVal || phoneVal.length < 6) {
-    alert("Veuillez entrer un numéro valide.");
+    alert("Veuillez entrer un numéro de téléphone valide.");
     return;
   }
 
+  const usdAmount = parseFloat(document.getElementById('service').value);
   const userEmail = document.getElementById('email').value;
   const userDate = document.getElementById('rdvDate').value;
 
+  // Préparation de l'affichage final
   document.getElementById('confirmEmail').innerText = userEmail;
   document.getElementById('confirmDate').innerText = userDate;
 
-  document.getElementById('step2').style.display = 'none';
-  document.getElementById('step3').style.display = 'block';
-  
-  document.getElementById('p2').classList.add('completed');
-  document.getElementById('p3').classList.add('active');
-}
-
-updateOperators();
-</script>
-
-</body>
-</html>
+  // Lancement du système de paiement réel LeekPay
+  if(typeof LeekPay !== "undefined") {
+    LeekPay.checkout({
+      amount: usdAmount,
+      currency: "USD",
+      apiKey: "pk_live_OIf3UkphEVWIVAJdd7VB6KWEm7IBuDwK",
