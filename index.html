@@ -8,10 +8,7 @@
 <style>
 body{
   font-family: Arial, sans-serif;
-  background:
-    linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
-    url("background.jpg") no-repeat center;
-  background-size: cover;
+  background: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), #222;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -131,15 +128,6 @@ button:hover{
   margin: 3px 0 0 0;
 }
 
-/* Gestion stricte et visible des etapes */
-.step {
-  display: none !important;
-}
-
-.step.active {
-  display: block !important;
-}
-
 .progress-bar {
   display: flex;
   justify-content: space-between;
@@ -214,8 +202,8 @@ button:hover{
     <div class="progress-step" id="p3">3</div>
   </div>
 
-  <!-- ÉTAPE 1 : FORMULAIRE D'ACCUEIL -->
-  <div class="step active" id="step1">
+  <!-- BLOC ÉTAPE 1 -->
+  <div id="step1" style="display: block;">
     <div class="form-group">
       <label>Sélectionnez le service administratif</label>
       <select id="service" onchange="calculateAmounts()">
@@ -236,11 +224,11 @@ button:hover{
       <input type="date" id="rdvDate">
     </div>
 
-    <button type="button" onclick="goToStep2()">Continuer vers le paiement</button>
+    <button type="button" onclick="versEtapeDeux()">Continuer vers le paiement</button>
   </div>
 
-  <!-- ÉTAPE 2 : SÉLECTION DES COORDONNÉES MOBILE MONEY -->
-  <div class="step" id="step2">
+  <!-- BLOC ÉTAPE 2 -->
+  <div id="step2" style="display: none;">
     <div class="form-group">
       <label>Sélectionnez votre pays</label>
       <select id="country" onchange="updateOperators(); calculateAmounts();">
@@ -272,12 +260,12 @@ button:hover{
       <p id="amountUsd">Équivalent : -- USD</p>
     </div>
 
-    <button type="button" onclick="declencherPaiement()">Confirmer et Payer</button>
-    <button type="button" class="btn-secondary" onclick="goBackToStep1()">Retour</button>
+    <button type="button" onclick="versEtapeTrois()">Confirmer et Payer</button>
+    <button type="button" class="btn-secondary" onclick="retourEtapeUn()">Retour</button>
   </div>
 
-  <!-- ÉTAPE 3 : ÉCRAN DE REMERCIEMENT FINALE -->
-  <div class="step" id="step3">
+  <!-- BLOC ÉTAPE 3 -->
+  <div id="step3" style="display: none;">
     <div class="success-icon">✓</div>
     <h4 style="color: #4caf50; margin-top: 0;">Paiement Traité avec Succès !</h4>
     
@@ -315,31 +303,31 @@ const operators = {
   SEN: ["ORANGE", "FREE"]
 };
 
-// Forçage de l'activation des pages par ID direct
-function goToStep2() {
+function versEtapeDeux() {
   const emailVal = document.getElementById('email').value.trim();
   const dateVal = document.getElementById('rdvDate').value;
 
   if(!emailVal || !emailVal.includes('@')) {
-    alert("Veuillez entrer une adresse e-mail valide pour recevoir votre reçu.");
+    alert("Veuillez entrer une adresse e-mail valide.");
     return;
   }
   if(!dateVal) {
-    alert("Veuillez sélectionner une date valide pour votre rendez-vous.");
+    alert("Veuillez sélectionner une date de rendez-vous.");
     return;
   }
 
-  document.getElementById('step1').classList.remove('active');
-  document.getElementById('step2').classList.add('active');
+  // Force l'affichage css brut sans passer par les classes compliquées
+  document.getElementById('step1').style.display = 'none';
+  document.getElementById('step2').style.display = 'block';
   
   document.getElementById('p1').classList.add('completed');
   document.getElementById('p2').classList.add('active');
   calculateAmounts();
 }
 
-function goBackToStep1() {
-  document.getElementById('step2').classList.remove('active');
-  document.getElementById('step1').classList.add('active');
+function r_un() {
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step1').style.display = 'block';
   document.getElementById('p1').classList.remove('completed');
   document.getElementById('p2').classList.remove('active');
 }
@@ -372,10 +360,10 @@ function calculateAmounts() {
   document.getElementById('amountUsd').innerText = "Équivalent : " + usdAmount + " USD";
 }
 
-function declencherPaiement(){
+function versEtapeTrois(){
   const phoneVal = document.getElementById('phone').value.trim();
   if(!phoneVal || phoneVal.length < 6) {
-    alert("Veuillez entrer un numéro de téléphone Mobile Money valide.");
+    alert("Veuillez entrer un numéro valide.");
     return;
   }
 
@@ -383,6 +371,17 @@ function declencherPaiement(){
   const userDate = document.getElementById('rdvDate').value;
 
   document.getElementById('confirmEmail').innerText = userEmail;
-  const d = new Date(userDate);
-  document.getElementById('confirmDate').innerText = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  document.getElementById('confirmDate').innerText = userDate;
 
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = 'block';
+  
+  document.getElementById('p2').classList.add('completed');
+  document.getElementById('p3').classList.add('active');
+}
+
+updateOperators();
+</script>
+
+</body>
+</html>
